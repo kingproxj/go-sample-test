@@ -1,4 +1,4 @@
-FROM registry.icp.com:5000/service/devops/runtime/golang:4.5.0
+FROM golang:1.12
 MAINTAINER xj
 WORKDIR /usr/bin
 RUN mkdir -p /etc/config/
