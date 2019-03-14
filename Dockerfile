@@ -1,4 +1,4 @@
-FROM docker.io/kingproxj/golang:4.5.0
+FROM kingproxj/golang:4.5.0
 MAINTAINER xj
 WORKDIR /usr/bin
 RUN mkdir -p /etc/config/
