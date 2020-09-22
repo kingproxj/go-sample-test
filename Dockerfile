@@ -1,4 +1,4 @@
-FROM kingproxj/golang:2.0.0
+FROM golang:1.15-alpine3.12
 MAINTAINER xj
 WORKDIR /usr/bin
 ADD . /usr/bin
