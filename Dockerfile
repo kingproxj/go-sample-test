@@ -1,7 +1,7 @@
 FROM kingproxj/golang:4.5.0
 MAINTAINER xj
 WORKDIR /usr/bin
-RUN mkdir -p /etc/config/
+RUN mkdir -p /etc/config/ /usr/bin/main
 ARG  jar_file
 ADD $jar_file /usr/bin
 RUN chmod -R a+rwx /usr/bin/main
