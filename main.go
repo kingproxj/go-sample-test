@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"encoding/json"
 )
 
 const middle = "========="
@@ -105,10 +106,15 @@ func (c Config) Read(node, key string) string {
 func helloHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("helloHandler begin.")
 	fmt.Println(r)
-	fmt.Printf("X-Forwarded-For: %s", r.Header.Get("X-Forwarded-For"))
-	fmt.Printf("HTTP_X_FORWARDED_FOR: %s", r.Header.Get("HTTP_X_FORWARDED_FOR"))
-	fmt.Printf("REMOTE-HOST: %s", r.Header.Get("REMOTE-HOST"))
-	fmt.Printf("X-Real-IP: %s", r.Header.Get("X-Real-IP"))
+	rJson, err := json.Marshal(r)
+	if err != nil {
+		fmt.Printf("json.Marshal error: %s\n", err)
+	}
+	fmt.Printf("rJson is %s\n", rJson)
+	fmt.Printf("X-Forwarded-For: %s\n", r.Header.Get("X-Forwarded-For"))
+	fmt.Printf("HTTP_X_FORWARDED_FOR: %s\n", r.Header.Get("HTTP_X_FORWARDED_FOR"))
+	fmt.Printf("REMOTE-HOST: %s\n", r.Header.Get("REMOTE-HOST"))
+	fmt.Printf("X-Real-IP: %s\n", r.Header.Get("X-Real-IP"))
 	envTEMP := os.Getenv("TEMP")
 	fmt.Fprintf(w, "Image:demo-go-A#####/##### Hello IOP Canary 333 aaa\n")
 	if envTEMP != "" {
@@ -148,10 +154,10 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 func helloWhoHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("helloWhoHandler begin.")
 	fmt.Println(r)
-	fmt.Printf("X-Forwarded-For: %s", r.Header.Get("X-Forwarded-For"))
-	fmt.Printf("HTTP_X_FORWARDED_FOR: %s", r.Header.Get("HTTP_X_FORWARDED_FOR"))
-	fmt.Printf("REMOTE-HOST: %s", r.Header.Get("REMOTE-HOST"))
-	fmt.Printf("X-Real-IP: %s", r.Header.Get("X-Real-IP"))
+	fmt.Printf("X-Forwarded-For: %s\n", r.Header.Get("X-Forwarded-For"))
+	fmt.Printf("HTTP_X_FORWARDED_FOR: %s\n", r.Header.Get("HTTP_X_FORWARDED_FOR"))
+	fmt.Printf("REMOTE-HOST: %s\n", r.Header.Get("REMOTE-HOST"))
+	fmt.Printf("X-Real-IP: %s\n", r.Header.Get("X-Real-IP"))
 	fmt.Fprintf(w, "Image:demo-go-A#####/hello-who#####")
 	fmt.Println("helloWhoHandler end.")
 	w.Write([]byte("Hello IOP Caleb 0829"))
