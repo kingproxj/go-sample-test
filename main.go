@@ -106,19 +106,13 @@ func (c Config) Read(node, key string) string {
 
 func RemoteIP(r *http.Request) string {
 	ip := strings.TrimSpace(strings.Split(r.Header.Get("X-Original-Forwarded-For"), ",")[0])
-	if ip != "" {
-		fmt.Printf("RemoteIP X-Original-Forwarded-For: %s\n", ip)
-	}
+	fmt.Printf("RemoteIP X-Original-Forwarded-For: %s\n", ip)
 
 	ip = strings.TrimSpace(strings.Split(r.Header.Get("X-Forwarded-For"), ",")[0])
-	if ip != "" {
-		fmt.Printf("RemoteIP X-Forwarded-For: %s\n", ip)
-	}
+	fmt.Printf("RemoteIP X-Forwarded-For: %s\n", ip)
 
 	ip = strings.TrimSpace(r.Header.Get("X-Real-Ip"))
-	if ip != "" {
-		fmt.Printf("RemoteIP X-Real-Ip: %s\n", ip)
-	}
+	fmt.Printf("RemoteIP X-Real-Ip: %s\n", ip)
 
 	if ip, _, err := net.SplitHostPort(strings.TrimSpace(r.RemoteAddr)); err == nil {
 		fmt.Printf("RemoteIP RemoteAddr: %s\n", ip)
