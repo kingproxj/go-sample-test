@@ -9,6 +9,7 @@ import (
 	"os"
 	"strings"
 	"encoding/json"
+	"net"
 )
 
 const middle = "========="
@@ -103,6 +104,30 @@ func (c Config) Read(node, key string) string {
 	return v
 }
 
+func RemoteIP(r *http.Request) string {
+	ip := strings.TrimSpace(strings.Split(r.Header.Get("X-Original-Forwarded-For"), ",")[0])
+	if ip != "" {
+		fmt.Printf("RemoteIP X-Original-Forwarded-For: %s\n", ip)
+	}
+
+	ip = strings.TrimSpace(strings.Split(r.Header.Get("X-Forwarded-For"), ",")[0])
+	if ip != "" {
+		fmt.Printf("RemoteIP X-Forwarded-For: %s\n", ip)
+	}
+
+	ip = strings.TrimSpace(r.Header.Get("X-Real-Ip"))
+	if ip != "" {
+		fmt.Printf("RemoteIP X-Real-Ip: %s\n", ip)
+	}
+
+	if ip, _, err := net.SplitHostPort(strings.TrimSpace(r.RemoteAddr)); err == nil {
+		fmt.Printf("RemoteIP RemoteAddr: %s\n", ip)
+		return ip
+	}
+
+	return ip
+}
+
 func helloHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("helloHandler begin.")
 	fmt.Println(r)
@@ -111,10 +136,12 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("json.Marshal error: %s\n", err)
 	}
 	fmt.Printf("rJson is %s\n", rJson)
-	fmt.Printf("X-Forwarded-For: %s\n", r.Header.Get("X-Forwarded-For"))
+	/*fmt.Printf("X-Forwarded-For: %s\n", r.Header.Get("X-Forwarded-For"))
 	fmt.Printf("HTTP_X_FORWARDED_FOR: %s\n", r.Header.Get("HTTP_X_FORWARDED_FOR"))
 	fmt.Printf("REMOTE-HOST: %s\n", r.Header.Get("REMOTE-HOST"))
-	fmt.Printf("X-Real-IP: %s\n", r.Header.Get("X-Real-IP"))
+	fmt.Printf("X-Real-IP: %s\n", r.Header.Get("X-Real-IP"))*/
+	RemoteIP(r)
+
 	envTEMP := os.Getenv("TEMP")
 	fmt.Fprintf(w, "Image:demo-go-A#####/##### Hello IOP Canary 333 aaa\n")
 	if envTEMP != "" {
@@ -154,10 +181,12 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 func helloWhoHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("helloWhoHandler begin.")
 	fmt.Println(r)
-	fmt.Printf("X-Forwarded-For: %s\n", r.Header.Get("X-Forwarded-For"))
+	/*fmt.Printf("X-Forwarded-For: %s\n", r.Header.Get("X-Forwarded-For"))
 	fmt.Printf("HTTP_X_FORWARDED_FOR: %s\n", r.Header.Get("HTTP_X_FORWARDED_FOR"))
 	fmt.Printf("REMOTE-HOST: %s\n", r.Header.Get("REMOTE-HOST"))
-	fmt.Printf("X-Real-IP: %s\n", r.Header.Get("X-Real-IP"))
+	fmt.Printf("X-Real-IP: %s\n", r.Header.Get("X-Real-IP"))*/
+	RemoteIP(r)
+
 	fmt.Fprintf(w, "Image:demo-go-A#####/hello-who#####")
 	fmt.Println("helloWhoHandler end.")
 	w.Write([]byte("Hello IOP Caleb 0829"))
